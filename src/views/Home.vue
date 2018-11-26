@@ -1,13 +1,19 @@
 <template>
-  <div class="constructor">
-    <StageItem
-      v-for="stage in stages"
-      :key="stage.id"
-      :index="stage.index"
-      :title="stage.title"
-      :id="stage.id"
-    />
-    <button role="button">Добавить стадию</button>
+  <div class="container">
+    <div class="constructor">
+      <StageItem
+        v-for="(stage, index) in stages"
+        :key="stage.id"
+        :id="stage.id"
+        :title="stage.title"
+        :index="index + 1"
+      />
+      <label>
+        Введите имя стадии
+        <input type="text" v-model="newStageTitle">
+      </label>
+      <button @click="addStage(newStageTitle)" role="button">Добавить стадию</button>
+    </div>    
   </div>
 </template>
 
@@ -21,36 +27,28 @@ export default {
   components: {
     StageItem
   },
+  data() {
+    return {
+      newStageTitle: ''
+    }
+  },
   computed: {
     ...mapGetters([
       'stages'
-    ]),
+    ])
   },
-  data () {
-    return {
-      // stages: [
-      //   {
-      //     id: 0,
-      //     index: 1,
-      //     title: 'Привет 1'
-      //   },
-      //   {
-      //     id: 1,
-      //     index: 2,
-      //     title: 'Привет 2'
-      //   },
-      //   {
-      //     id: 2,
-      //     index: 3,
-      //     title: 'Привет 3'
-      //   },
-      //   {
-      //     id: 3,
-      //     index: 4,
-      //     title: 'Привет 4'
-      //   }
-      // ]
-    }
+  methods: {
+    ...mapActions([
+      'addStage'
+    ])
   }
 }
 </script>
+
+
+<style lang="scss">
+  .container {
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+</style>
