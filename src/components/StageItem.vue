@@ -8,14 +8,25 @@
     </dt>
     <dd ref="panel" class="stage-item__body">
       <div class="stage-item__inner">
-        Inner test
+        <StepItem
+          v-for="(step, index) in steps"
+          :key="step.id"
+          :id="step.id"
+          :title="step.title"
+          :index="index"
+        />
       </div>
     </dd>
   </div>
 </template>
 
 <script>
+  import StepItem from "@/components/StepItem.vue"
+
   export default {
+    components: {
+      StepItem
+    },
     props: {
       id: {
         type: Number,
@@ -31,6 +42,11 @@
         validator(value) {
           return Boolean( value.trim() )
         }
+      }
+    },
+    computed: {
+      steps() {
+        return this.$store.getters.stepsByStageId(this.id)
       }
     },
     data() {
