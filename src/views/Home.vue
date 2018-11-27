@@ -1,13 +1,19 @@
 <template>
   <div class="container">
     <div class="constructor">
-      <draggable v-model="stages" :options="{group: 'people'}">
+      <draggable 
+        @start="dragStarted=true" 
+        @end="dragStarted=false" 
+        v-model="stages" 
+        :options="{handle: '.handler', ghostClass: 'ghost'}"
+      >
         <StageItem
           v-for="(stage, index) in stages"
           :key="stage.id"
           :id="stage.id"
           :title="stage.title"
           :index="index + 1"
+          :dragStarted="dragStarted"
         />
       </draggable>
       <label>
@@ -34,7 +40,8 @@ export default {
   data() {
     return {
       newStageTitle: '',
-      test: []
+      test: [],
+      dragStarted: false
     }
   },
   computed: {

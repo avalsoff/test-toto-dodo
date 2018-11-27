@@ -1,10 +1,12 @@
 <template>
   <div class="stage-item" :class="{'stage-item--opened': isOpened}">
     <dt @click="toggleAccordion" class="stage-item__header">
-      <p class="stage-item__index">Этап №{{ index }}</p>
+      <p v-if="!dragStarted" class="stage-item__index">Этап №{{ index }}</p>
+      <p v-else style="width:90px"></p>
       <h3 class="stage-item__title">{{ title }}</h3>
       <!-- TODO: Make dynamic -->
-      <p class="stage-item__time">05:00</p>      
+      <p class="stage-item__time">05:00</p>
+      <button class="handler" type="button">Drag handler</button>     
     </dt>
     <dd ref="panel" class="stage-item__body">
       <div class="stage-item__inner">
@@ -42,6 +44,9 @@
         validator(value) {
           return Boolean( value.trim() )
         }
+      },
+      dragStarted: {
+        type: Boolean,
       }
     },
     computed: {
@@ -124,5 +129,23 @@
         }      
       }
     }
+  }
+
+  .handler {
+    outline: none;
+    position: absolute;
+    cursor: move;
+    right: 35px;
+    top: 15px;
+    width: 28px;
+    height: 28px;
+    font-size: 0;
+    border: none;
+    background: url('../assets/move.svg');
+    background-size: cover;
+  }
+
+  .ghost {
+    opacity: .55;
   }
 </style>
