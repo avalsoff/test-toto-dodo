@@ -6,6 +6,8 @@ export default {
   },
 
   addStage(state, stage) {
-    state.stages.push(stage)
-  }
+    state.stageIDs.push(stage.id)
+    state.stages.byId[stage.id] = stage
+    state.stages.allIds.push(stage.id)
+  },
 }

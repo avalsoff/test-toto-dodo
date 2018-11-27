@@ -10,8 +10,9 @@ export const initStore = ({ commit }) => {
 
 export const addStage = ({ commit }, title) => {
   commit('addStage', {
+    id: Date.now(),
     title,
-    id: Date.now()
+    steps: []
   })
 }
 
