@@ -16,5 +16,9 @@ export const addStage = ({ commit }, title) => {
   })
 }
 
+export const setStageIds = ({ commit }, ids) => {
+  commit('setStageIds', ids)
+}
+
 export const removeStage = ({ commit }, payload) => {
 }

@@ -10,4 +10,8 @@ export default {
     state.stages.byId[stage.id] = stage
     state.stages.allIds.push(stage.id)
   },
+
+  setStageIds(state, ids) {
+    state.stageIDs = ids
+  }
 }
