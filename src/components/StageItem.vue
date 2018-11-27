@@ -1,14 +1,14 @@
 <template>
   <div class="stage-item" :class="{'stage-item--opened': isOpened}">
     <dt @click="toggleAccordion" class="stage-item__header">
-      <small class="stage-item__index">Этап {{ index }}:</small>
+      <p class="stage-item__index">Этап №{{ index }}</p>
       <h3 class="stage-item__title">{{ title }}</h3>
       <!-- TODO: Make dynamic -->
       <p class="stage-item__time">05:00</p>      
     </dt>
     <dd ref="panel" class="stage-item__body">
-      <div class="text">
-        s;lkdfj;askldjfkl j
+      <div class="stage-item__inner">
+        Inner test
       </div>
     </dd>
   </div>
@@ -75,6 +75,15 @@
       }
     }
 
+    &__index,
+    &__time {
+      border: 1px solid #0070BA;
+      border-radius: 20px;
+      padding: 4px 15px;
+      color: #0070BA;
+      font-size: 14px;
+    }
+
     &__body {
       max-height: 0;
       display: block;
@@ -83,7 +92,10 @@
       transition: max-height 0.2s ease-out;
       background: #fafafa;
       margin: 0;
+    }
 
+    &__inner {
+      padding: 25px 36px;
     }
 
     &--opened & {
@@ -96,9 +108,5 @@
         }      
       }
     }
-  }
-
-  .text {
-    padding: 50px 25px;
   }
 </style>
