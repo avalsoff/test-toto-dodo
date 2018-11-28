@@ -6,10 +6,17 @@ export default {
   },
 
   addStage(state, stage) {
-    state.stageIDs.push(stage.id)
-    Vue.set(state.stages.byId, String(stage.id), stage)
-    // state.stages.byId[stage.id] = stage
-    state.stages.allIds.push(stage.id)
+    const id = stage.id
+    state.stageIDs.push(id)
+    state.stages.allIds.push(id)
+    Vue.set(state.stages.byId, String(id), stage)
+  },
+
+  addStep(state, { stageId, stepData }) {
+    const stepId = stepData.id;
+    state.stages.byId[stageId].steps.push(stepId)
+    state.steps.allIds.push(stepId)
+    Vue.set(state.steps.byId, String(stepId), stepData)
   },
 
   setStageIds(state, ids) {

@@ -1,5 +1,5 @@
 <template>
-  <div class="stage-item" :class="{'stage-item--opened': isOpened}">
+  <div class="stage-item" :class="{'stage-item--opened': isAccordionOpened}">
     <dt @click="toggleAccordion" class="stage-item__header">
       <p v-if="!dragStarted" class="stage-item__index">Этап №{{ index }}</p>
       <p v-else style="width:90px"></p>
@@ -18,16 +18,31 @@
           :index="index"
         />
       </div>
+      <button @click="modalVisible=true" type="button">Добавить шаг</button>
+      <ModalEdit
+        title="Добавить шаг"
+        v-show="modalVisible"
+        @close="modalVisible=false"
+      >
+        <input v-model="newStepTitle" type="text" name="" id="" placeholder="Введите название шага">
+        <button @click="addStep({ id, newStepTitle })" type="button">Добавить</button>
+
+      </ModalEdit>
     </dd>
+    
   </div>
 </template>
 
 <script>
   import StepItem from "@/components/StepItem.vue"
+  import ModalEdit from "@/components/ModalEdit.vue"
+
+  import { mapActions, mapGetters } from 'vuex'
 
   export default {
     components: {
-      StepItem
+      StepItem,
+      ModalEdit
     },
     props: {
       id: {
@@ -50,25 +65,42 @@
       }
     },
     computed: {
-      steps() {
-        return this.$store.getters.stepsByStageId(this.id)
+      steps: {
+        get() {
+          return this.$store.getters.stepsByStageId(this.id)
+        },
+
+        set(steps) {
+          const ids = steps.map(step => step.id)
+          return this.$store.dispatch('setStepIds', ids)
+        }
       }
     },
     data() {
       return {
-        isOpened: false
+        isAccordionOpened: false,
+        modalVisible: false,
+        newStepTitle: ''
       }
     },
     methods: {
+      ...mapActions([
+        'addStep'
+      ]),
       toggleAccordion() {
+        this.isAccordionOpened = !this.isAccordionOpened
+      },
+      updateHeight() {
         const panel = this.$refs.panel
-        if (this.isOpened) {
-          panel.style.maxHeight = null
-        } else {
+        if (this.isAccordionOpened) {
           panel.style.maxHeight = panel.scrollHeight + 'px'
+        } else {
+          panel.style.maxHeight = null
         }
-        this.isOpened = !this.isOpened;
       }
+    },
+    updated() {
+      this.updateHeight()
     }
   };
 </script>
@@ -76,7 +108,7 @@
 <style lang="scss">
   .stage-item {
     width: 100%;
-    margin-bottom: 10px;
+    padding-bottom: 10px;
 
     &__header {
       position: relative;
@@ -113,6 +145,7 @@
       transition: max-height 0.2s ease-out;
       background: #fafafa;
       margin: 0;
+      border-radius: 0 0 8px 8px;
     }
 
     &__inner {

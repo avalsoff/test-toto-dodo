@@ -16,6 +16,17 @@ export const addStage = ({ commit }, title) => {
   })
 }
 
+export const addStep = ({ commit }, { id: stageId, newStepTitle: title }) => {
+  commit('addStep', {    
+    stageId,
+    stepData: {
+      id: Date.now(),
+      title,
+      elems: []
+    }
+  });
+}
+
 export const setStageIds = ({ commit }, ids) => {
   commit('setStageIds', ids)
 }

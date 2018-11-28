@@ -5,7 +5,11 @@
         @start="dragStarted=true" 
         @end="dragStarted=false" 
         v-model="stages" 
-        :options="{handle: '.handler', ghostClass: 'ghost'}"
+        :options="{
+          handle: '.handler', 
+          ghostClass: 'ghost',
+          setData: modifyDragItem
+        }"
       >
         <StageItem
           v-for="(stage, index) in stages"
@@ -16,17 +20,22 @@
           :dragStarted="dragStarted"
         />
       </draggable>
-      <label>
-        Введите имя стадии
-        <input type="text" v-model="newStageTitle">
-      </label>
-      <button @click="addStage(newStageTitle)" role="button">Добавить стадию</button>
-    </div>    
+      <button @click="modalVisible=true" role="button">Добавить стадию</button>
+    </div>
+    <ModalEdit 
+      v-show="modalVisible"
+      @close="modalVisible=false"
+      title="Добавить стадию"
+    > 
+      <input v-model="newStageTitle" type="text" name="" id="" placeholder="Введите название стадии">
+      <button @click="addStage(newStageTitle)">Добавить</button>
+    </ModalEdit>
   </div>
 </template>
 
 <script>
 import StageItem from '@/components/StageItem.vue'
+import ModalEdit from '@/components/ModalEdit.vue'
 
 import draggable from 'vuedraggable'
 import { mapActions, mapGetters } from 'vuex'
@@ -35,13 +44,15 @@ export default {
   name: 'home',
   components: {
     draggable,
-    StageItem
+    StageItem,
+    ModalEdit
   },
   data() {
     return {
       newStageTitle: '',
       test: [],
-      dragStarted: false
+      dragStarted: false,
+      modalVisible: false
     }
   },
   computed: {
@@ -49,8 +60,8 @@ export default {
       get() {
         return this.$store.getters.stages
       },
-      set(stage) {
-        const ids = stage.map(stage => stage.id)
+      set(stages) {
+        const ids = stages.map(stage => stage.id)
         this.$store.dispatch('setStageIds', ids)
       }
     }
@@ -58,7 +69,17 @@ export default {
   methods: {
     ...mapActions([
       'addStage'
-    ])
+    ]),
+
+    // Fix huge drag-image, replace it to the .stage-item__header
+    modifyDragItem(dataTransfer, dragEl) {
+      const HANDLER_PADDING = 45
+      
+      const header = dragEl.firstChild 
+      const width = header.scrollWidth - HANDLER_PADDING;
+      const height = header.scrollHeight
+      dataTransfer.setDragImage(dragEl.firstChild, width, height / 2)
+    }
   }
 }
 </script>
