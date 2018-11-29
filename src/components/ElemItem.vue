@@ -1,7 +1,7 @@
 <template>
   <li class="elem">   
     <span class="line line--horizontal"></span>
-    <div class="elem__body">{{ index }}</div>
+    <div class="elem__body">{{ title }}</div>
 
     <!-- <ModalEdit
 
@@ -26,13 +26,13 @@
         type: Number,
         required: true
       },
-      // title: {
-      //   type: String,
-      //   required: true,
-      //   validator(value) {
-      //     return Boolean( value.trim() )
-      //   }
-      // },
+      title: {
+        type: String,
+        required: true,
+        validator(value) {
+          return Boolean( value.trim() )
+        }
+      },
       // manager: {
       //   type: String,
       //   required: true,

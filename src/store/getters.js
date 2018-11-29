@@ -1,18 +1,16 @@
-
-
 export const stages = state => {
   return state.stageIDs.map(id => state.stages.byId[id])
 }
 
-export const stepsByStageId = state => id => {
-  const ids = state.stages.byId[id].steps
-  return ids.map(id => state.steps.byId[id])
-}
+// export const stepsByStageId = state => id => {
+//   const ids = state.stages.byId[id].steps
+//   return ids.map(id => state.steps.byId[id])
+// }
 
-export const elemsByStepId = state => id => {
-  const ids = state.steps.byId[id].elems
-  return ids.map(id => state.elems.byId[id])
-}
+// export const elemsByStepId = state => id => {
+//   const ids = state.steps.byId[id].elems
+//   return ids.map(id => state.elems.byId[id])
+// }
 
 
 // DRY, but less readable

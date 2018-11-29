@@ -1,11 +1,20 @@
 <template>
-  <div class="stage-item" :class="{'stage-item--opened': isAccordionOpened}">
+  <dl
+    :class="{
+      'stage-item': true,
+      'stage-item--opened': isAccordionOpened
+    }"
+  >
     <dt @click="toggleAccordion" class="stage-item__header">
-      <p v-if="!dragStarted" class="stage-item__index">Этап №{{ index }}</p>
-      <p v-else style="width:90px"></p>
+      <div class="stage-item__side">
+        <p v-if="!dragStarted" class="stage-item__index">Этап №{{ index }}</p>
+        <p v-else style="width:90px"></p>
+      </div>
       <h3 class="stage-item__title">{{ title }}</h3>
       <!-- TODO: Make dynamic -->
-      <p class="stage-item__time">05:00</p>
+      <div class="stage-item__side stage-item__side--right">
+        <p class="stage-item__time">05:00</p>
+      </div>
       <button class="handler" type="button">Drag handler</button>     
     </dt>
     <dd ref="panel" class="stage-item__body">
@@ -21,23 +30,44 @@
             :key="step.id"
             :id="step.id"
             :title="step.title"
-            :index="index"
+            :index="index + 1"
+            :elemIds="step.elems"
           />
         </draggable>
+        <button  
+          type="button"
+          class="button button--size--medium task-builder__button"
+          @click="openAddStepModal"
+        >
+          Добавить шаг
+        </button>
       </div>
-      <button @click="modalVisible=true" type="button">Добавить шаг</button>
-      <ModalEdit
-        title="Добавить шаг"
-        v-show="modalVisible"
-        @close="modalVisible=false"
-      >
-        <input v-model="newStepTitle" type="text" name="" id="" placeholder="Введите название шага">
-        <button @click="addStep({ id, newStepTitle })" type="button">Добавить</button>
-
-      </ModalEdit>
     </dd>
-    
-  </div>
+
+    <ModalEdit 
+      v-show="modalVisible"
+      @close="modalVisible=false"
+      title="Добавить шаг"
+      :onSbm="() => addStepAndClearTitle()"
+    > 
+      <input 
+        ref="toFocus"
+        required
+        slot="body"
+        type="text"
+        class="input modal__input"
+        placeholder="Введите название шага"
+        v-model="newStepTitle"
+      >
+      <button 
+        slot="footer"
+        type="submit"
+        class="button button--size--small modal__button"
+      >
+        Добавить
+      </button>
+    </ModalEdit>    
+  </dl>
 </template>
 
 <script>
@@ -70,6 +100,10 @@
           return Boolean( value.trim() )
         }
       },
+      stepIds: {
+        type: Array,
+        required: true
+      },
       dragStarted: {
         type: Boolean,
       }
@@ -77,7 +111,9 @@
     computed: {
       steps: {
         get() {
-          return this.$store.getters.stepsByStageId(this.id)
+          return this.stepIds.map(id => {
+            return this.$store.state.steps.byId[id]
+          })
         },
 
         set(steps) {
@@ -97,9 +133,24 @@
       ...mapActions([
         'addStep'
       ]),
+
+      openAddStepModal() {
+        this.modalVisible = true
+        this.$nextTick(() => this.$refs.toFocus.focus())      
+      },
+
+      addStepAndClearTitle() {
+        this.addStep({ 
+          id: this.id, 
+          newStepTitle: this.newStepTitle
+        })
+        this.newStepTitle = ''
+      },
+
       toggleAccordion() {
         this.isAccordionOpened = !this.isAccordionOpened
       },
+
       updateHeight() {
         const panel = this.$refs.panel
         if (this.isAccordionOpened) {
@@ -140,11 +191,21 @@
 
     &__index,
     &__time {
-      border: 1px solid #0070BA;
+      border: 1px solid $accent;
       border-radius: 20px;
       padding: 4px 15px;
-      color: #0070BA;
+      color: $accent;
       font-size: 14px;
+    }
+
+    &__side {
+      display: flex;
+      width: 20%;
+      flex-grow: 1;
+
+      &--right {
+        justify-content: flex-end;
+      }
     }
 
     &__body {

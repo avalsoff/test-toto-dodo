@@ -1,7 +1,7 @@
 <template>
   <div class="container">
 
-    <div class="constructor">
+    <div class="task-builder">
       <draggable 
         @start="dragStarted=true" 
         @end="dragStarted=false" 
@@ -23,8 +23,8 @@
       </draggable>
       <button 
         role="button"
-        class="button constructor__button" 
-        @click="modalVisible=true" 
+        class="button task-builder__button" 
+        @click="openAddStageModal" 
       >
         Добавить этап
       </button>
@@ -38,6 +38,7 @@
       :onSbm="() => addStageAndClearTitle()"
     > 
       <input 
+        ref="toFocus"
         required
         slot="body"
         type="text"
@@ -93,6 +94,11 @@ export default {
       'addStage'
     ]),
 
+    openAddStageModal() {
+      this.modalVisible = true
+      this.$nextTick(() => this.$refs.toFocus.focus())      
+    },
+
     addStageAndClearTitle() {
       this.addStage(this.newStageTitle)
       this.newStageTitle = ''
@@ -113,7 +119,7 @@ export default {
 
 
 <style lang="scss">
-  .constructor {
+  .task-builder {
     &__button {
       display: block;
       margin: 0 auto;

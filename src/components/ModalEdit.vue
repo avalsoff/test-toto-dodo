@@ -5,7 +5,7 @@
         <header class="modal__header">
           {{ title }}
         </header>
-        <form @submit="onSbm">            
+        <form @submit.prevent="onSbm" @keyup.esc="close">            
           <section class="modal__body">
             <slot name="body"></slot>
           </section>
@@ -71,7 +71,7 @@ export default {
   &__footer {
     padding: 15px 25px;
     display: flex;
-    justify-content: flex-end;
+    flex-direction: row-reverse;
   }
 
   &__input {

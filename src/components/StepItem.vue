@@ -11,7 +11,7 @@
       <span class="line line--horizontal"></span>
     </div>
     <div class="step-item__controls">      
-      <button @click="modalVisible=true" title="Добавить элемент" type="button" class="step-item__add-elem"></button>
+      <button @click="openAddElemModal" title="Добавить элемент" type="button" class="step-item__add-elem"></button>
     </div>
     <div class="step-item__body">
       <draggable
@@ -31,16 +31,46 @@
         />
       </draggable>
     </div>
-    <ModalEdit
-      title="Добавить элемент"
+
+    <ModalEdit 
       v-show="modalVisible"
       @close="modalVisible=false"
-    >
-      <input v-model="newElemTitle" type="text" name="" id="" placeholder="Введите название задачи">
-      <input v-model="newElemManager" type="text" name="" id="" placeholder="Введите имя ответственного">
-      <input v-model="newElemTime" type="text" name="" id="" placeholder="Введите время">
-      <button @click="addElem({ id, elemData: { newElemTitle, newElemManager, newElemTime } })" type="button">Добавить</button>
-    </ModalEdit>
+      title="Добавить элемент"
+      :onSbm="() => addElemAndClearAll()"
+    > 
+      <input 
+        ref="toFocus"
+        required
+        slot="body"
+        type="text"
+        class="input modal__input"
+        placeholder="Введите название задания"
+        v-model="newElemTitle"
+      >
+      <input 
+        required
+        slot="body"
+        type="text"
+        class="input modal__input"
+        placeholder="Введите ФИО отвественного"
+        v-model="newElemManager"
+      >
+      <input 
+        required
+        slot="body"
+        type="text"
+        class="input modal__input"
+        placeholder="Введите время"
+        v-model="newElemTime"
+      >
+      <button 
+        slot="footer"
+        type="submit"
+        class="button button--size--small modal__button"
+      >
+        Добавить
+      </button>
+    </ModalEdit>    
   </div>
 </template>
 
@@ -72,12 +102,18 @@
         validator(value) {
           return Boolean( value.trim() )
         }
+      },
+      elemIds: {
+        type: Array,
+        required: true
       }
     },
     computed: {
       elems: {
         get() {
-          return this.$store.getters.elemsByStepId(this.id)
+          return this.elemIds.map(id => {
+            return this.$store.state.elems.byId[id]
+          })
         },
 
         set(elems) {
@@ -89,7 +125,26 @@
     methods: {
       ...mapActions([
         'addElem'
-      ])
+      ]),
+
+      openAddElemModal() {
+        this.modalVisible = true
+        this.$nextTick(() => this.$refs.toFocus.focus())      
+      },
+
+      addElemAndClearAll() {
+        this.addElem({ 
+          id: this.id, 
+          elemData: {
+            title: this.newElemTitle,
+            manager: this.newElemManager,
+            time: this.newElemTime
+          }
+        })
+        this.newElemTitle = ''
+        this.newElemManager = ''
+        this.newElemTime = ''
+      }
     },
     data() {
       return {
@@ -106,7 +161,7 @@
   .step-item {
     display: flex;
     align-items: center;
-    margin-bottom: 15px;
+    padding-bottom: 15px;
 
     &__header {
       display: flex;
@@ -126,6 +181,10 @@
       margin: 0;
     }
 
+    &__title {
+      max-width: 70%;
+    }
+
     &__add-elem {
       cursor: pointer;
       outline: none;
@@ -133,8 +192,8 @@
       background-size: cover;
       border: none;
       border-radius: 50%;
-      width: 40px;
-      height: 40px;
+      width: 36px;
+      height: 36px;
       left: 35px;
       top: 16px;
     }
