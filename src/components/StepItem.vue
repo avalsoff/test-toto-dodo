@@ -10,21 +10,52 @@
       </p>
       <span class="line line--horizontal"></span>
     </div>
-    <div class="step-item__controls">
-      <button title="Добавить элемент" type="button" class="step-item__add-elem"></button>
+    <div class="step-item__controls">      
+      <button @click="modalVisible=true" title="Добавить элемент" type="button" class="step-item__add-elem"></button>
     </div>
     <div class="step-item__body">
-      <span class="line line--horizontal"></span>
-      <ul class="step-item__elems">
-      </ul>
+      <draggable
+        class="step-item__elems"
+        v-model="elems" 
+        element="ul"
+        :options="{
+          ghostClass: 'ghost',
+        }"
+      >
+        <ElemItem
+          v-for="(elem, index) in elems"
+          :key="elem.id"
+          :id="elem.id"
+          :title="elem.title"
+          :index="index"
+        />
+      </draggable>
     </div>
+    <ModalEdit
+      title="Добавить элемент"
+      v-show="modalVisible"
+      @close="modalVisible=false"
+    >
+      <input v-model="newElemTitle" type="text" name="" id="" placeholder="Введите название задачи">
+      <input v-model="newElemManager" type="text" name="" id="" placeholder="Введите имя ответственного">
+      <input v-model="newElemTime" type="text" name="" id="" placeholder="Введите время">
+      <button @click="addElem({ id, elemData: { newElemTitle, newElemManager, newElemTime } })" type="button">Добавить</button>
+    </ModalEdit>
   </div>
 </template>
 
 <script>
+  import ElemItem from '@/components/ElemItem.vue'
+  import ModalEdit from '@/components/ModalEdit.vue'
+
+  import draggable from 'vuedraggable'
+  import { mapActions, mapGetters } from 'vuex'
+
   export default {
     components: {
-      // StepItem
+      ElemItem,
+      ModalEdit,
+      draggable
     },
     props: {
       id: {
@@ -43,6 +74,31 @@
         }
       }
     },
+    computed: {
+      elems: {
+        get() {
+          return this.$store.getters.elemsByStepId(this.id)
+        },
+
+        set(elems) {
+          const newElems = elems.map(elem => elem.id)
+          return this.$store.dispatch('setElemIds', { id: this.id, newElems })
+        }
+      }
+    },
+    methods: {
+      ...mapActions([
+        'addElem'
+      ])
+    },
+    data() {
+      return {
+        modalVisible: false,
+        newElemTitle: '',
+        newElemManager: '',
+        newElemTime: ''
+      }
+    }
   }
 </script>
 
@@ -56,7 +112,8 @@
       display: flex;
       align-items: center;
       justify-content: space-between;
-      width: 489px;
+      width: 40%;
+      flex-grow: 1
     }
 
     &__index,
@@ -69,7 +126,9 @@
       margin: 0;
     }
 
-    &__add-elem {      
+    &__add-elem {
+      cursor: pointer;
+      outline: none;
       background: url('../assets/add.svg');
       background-size: cover;
       border: none;
@@ -81,7 +140,8 @@
     }
 
     &__body {
-
+      width: 40%;
+      flex-grow: 1
     }
 
     &__elems {
@@ -90,7 +150,6 @@
       list-style-type: none;
       margin: 0;
       padding: 0;
-      width: 400px;
     }
   }
 

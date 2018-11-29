@@ -10,13 +10,20 @@
     </dt>
     <dd ref="panel" class="stage-item__body">
       <div class="stage-item__inner">
-        <StepItem
-          v-for="(step, index) in steps"
-          :key="step.id"
-          :id="step.id"
-          :title="step.title"
-          :index="index"
-        />
+        <draggable
+          v-model="steps" 
+          :options="{
+            ghostClass: 'ghost'
+          }"
+        >
+          <StepItem
+            v-for="(step, index) in steps"
+            :key="step.id"
+            :id="step.id"
+            :title="step.title"
+            :index="index"
+          />
+        </draggable>
       </div>
       <button @click="modalVisible=true" type="button">Добавить шаг</button>
       <ModalEdit
@@ -37,12 +44,15 @@
   import StepItem from "@/components/StepItem.vue"
   import ModalEdit from "@/components/ModalEdit.vue"
 
+  import draggable from 'vuedraggable'
   import { mapActions, mapGetters } from 'vuex'
+
 
   export default {
     components: {
       StepItem,
-      ModalEdit
+      ModalEdit,
+      draggable
     },
     props: {
       id: {
@@ -71,8 +81,8 @@
         },
 
         set(steps) {
-          const ids = steps.map(step => step.id)
-          return this.$store.dispatch('setStepIds', ids)
+          const newSteps = steps.map(step => step.id)
+          return this.$store.dispatch('setStepIds', { id: this.id, newSteps })
         }
       }
     },

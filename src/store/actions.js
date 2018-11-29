@@ -16,6 +16,10 @@ export const addStage = ({ commit }, title) => {
   })
 }
 
+export const setStageIds = ({ commit }, ids) => {
+  commit('setStageIds', ids)
+}
+
 export const addStep = ({ commit }, { id: stageId, newStepTitle: title }) => {
   commit('addStep', {    
     stageId,
@@ -27,9 +31,23 @@ export const addStep = ({ commit }, { id: stageId, newStepTitle: title }) => {
   });
 }
 
-export const setStageIds = ({ commit }, ids) => {
-  commit('setStageIds', ids)
+export const setStepIds = ({ commit }, { id: stageId, newSteps }) => {
+  commit('setSteps', { stageId, newSteps })
 }
 
-export const removeStage = ({ commit }, payload) => {
+export const addElem = ({ commit }, { id: stepId, elemData }) => {
+  const { title, manager, time } = elemData
+  commit('addElem', {    
+    stepId,
+    elemData: {
+      id: Date.now(),
+      title,
+      manager,
+      time
+    }
+  });
+}
+
+export const setElemIds = ({ commit }, { id: stepId, newElems }) => {
+  commit('setElems', { stepId, newElems })
 }
