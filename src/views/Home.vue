@@ -1,12 +1,12 @@
 <template>
   <div class="container">
+
     <div class="constructor">
       <draggable 
         @start="dragStarted=true" 
         @end="dragStarted=false" 
         v-model="stages" 
         :options="{
-          handle: '.handler', 
           ghostClass: 'ghost',
           setData: modifyDragItem
         }"
@@ -16,20 +16,43 @@
           :key="stage.id"
           :id="stage.id"
           :title="stage.title"
+          :stepIds="stage.steps"
           :index="index + 1"
           :dragStarted="dragStarted"
         />
       </draggable>
-      <button @click="modalVisible=true" role="button">Добавить стадию</button>
+      <button 
+        role="button"
+        class="button constructor__button" 
+        @click="modalVisible=true" 
+      >
+        Добавить этап
+      </button>
     </div>
+
+
     <ModalEdit 
       v-show="modalVisible"
       @close="modalVisible=false"
-      title="Добавить стадию"
+      title="Добавить этап"
+      :onSbm="() => addStageAndClearTitle()"
     > 
-      <input v-model="newStageTitle" type="text" name="" id="" placeholder="Введите название стадии">
-      <button @click="addStage(newStageTitle)">Добавить</button>
+      <input 
+        required
+        slot="body"
+        type="text"
+        class="input modal__input"
+        placeholder="Введите название этапа"
+        v-model="newStageTitle"
+      >
+      <button 
+        slot="footer"
+        class="button button--size--small modal__button"
+      >
+        Добавить
+      </button>
     </ModalEdit>
+
   </div>
 </template>
 
@@ -50,7 +73,6 @@ export default {
   data() {
     return {
       newStageTitle: '',
-      test: [],
       dragStarted: false,
       modalVisible: false
     }
@@ -71,12 +93,17 @@ export default {
       'addStage'
     ]),
 
-    // Fix huge drag-image, replace it to the .stage-item__header
+    addStageAndClearTitle() {
+      this.addStage(this.newStageTitle)
+      this.newStageTitle = ''
+    },
+
+    // Fix huge drag-image, replace it with the .stage-item__header
     modifyDragItem(dataTransfer, dragEl) {
       const HANDLER_PADDING = 45
       
       const header = dragEl.firstChild 
-      const width = header.scrollWidth - HANDLER_PADDING;
+      const width = header.scrollWidth - HANDLER_PADDING
       const height = header.scrollHeight
       dataTransfer.setDragImage(dragEl.firstChild, width, height / 2)
     }
@@ -86,8 +113,10 @@ export default {
 
 
 <style lang="scss">
-  .container {
-    max-width: 1100px;
-    margin: 0 auto;
+  .constructor {
+    &__button {
+      display: block;
+      margin: 0 auto;
+    }
   }
 </style>

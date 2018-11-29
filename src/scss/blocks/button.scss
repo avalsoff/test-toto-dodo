@@ -1,0 +1,34 @@
+.button {
+  cursor: pointer;
+  outline: none;
+  font-size: 15px;
+  color: $accent;
+  background: #e5f0f8;
+  border: 1px solid $accent;
+  border-bottom: 2px solid $accent;
+  border-radius: 5px;
+  padding: 6px 15px;
+
+
+  &:hover {
+    background: lighten(#e5f0f8, 1%);
+    border-color: lighten($accent, 10%);
+    color: lighten($accent, 10%);
+  }
+
+  &:active {
+    border: 1px solid $accent;
+    color: darken($accent, 10%);
+    margin-top: 1px;
+  }  
+
+  &--size--medium {
+    font-size: 14px;
+    padding: 5px 10px;
+  }
+
+  &--size--small {
+    font-size: 13px;
+    padding: 3px 8px;
+  }
+}
