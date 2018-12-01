@@ -111,7 +111,7 @@ export default {
       const header = dragEl.firstChild 
       const width = header.scrollWidth - HANDLER_PADDING
       const height = header.scrollHeight
-      dataTransfer.setDragImage(dragEl.firstChild, width, height / 2)
+      dataTransfer.setDragImage(header, width, height / 2)
     }
   }
 }

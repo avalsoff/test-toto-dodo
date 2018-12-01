@@ -2,27 +2,16 @@ export const stages = state => {
   return state.stageIDs.map(id => state.stages.byId[id])
 }
 
-// export const stepsByStageId = state => id => {
-//   const ids = state.stages.byId[id].steps
-//   return ids.map(id => state.steps.byId[id])
-// }
+export const stepTime = state => id => {
+  const elemIds = state.steps.byId[id].elems
+  const elems = elemIds.map(id => state.elems.byId[id])
+  return elems.reduce((sum, elem) => {
+    return sum + elem.time
+  }, 0)
+}
 
-// export const elemsByStepId = state => id => {
-//   const ids = state.steps.byId[id].elems
-//   return ids.map(id => state.elems.byId[id])
-// }
-
-
-// DRY, but less readable
-
-// const getterTakeElemsFromItemId = (from, take) => {
-//   return state => id => {
-//     const takeIds = state[from].byId[id][take]
-//     return takeIds.map(id => state[take].byId[id])
-//   }
-// }
-
-// export const stepsByStageId = getterTakeElemsFromItemId('stages', 'steps')
-
-// export const elemsByStepId = getterTakeElemsFromItemId('steps', 'elems')
-
+export const stageTime = (state, getters) => id => {
+  const stepIds = state.stages.byId[id].steps
+  const times = stepIds.map(id => getters.stepTime(id))
+  return times.reduce((sum, t) => sum + t, 0)
+}

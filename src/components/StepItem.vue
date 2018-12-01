@@ -4,11 +4,15 @@
       <p class="step-item__index">
         Шаг № {{ index }}
       </p>
+      <span class="line line--fixed"></span>
+      <p class="step-item__title">
+        {{ time | formatTime }}
+      </p>
       <span class="line line--horizontal"></span>
       <p class="step-item__title">
         {{ title }}
       </p>
-      <span class="line line--horizontal"></span>
+      <span class="line line--fixed line--size--medium"></span>
     </div>
     <div class="step-item__controls">      
       <button @click="openAddElemModal" title="Добавить элемент" type="button" class="step-item__add-elem"></button>
@@ -19,7 +23,8 @@
         v-model="elems" 
         element="ul"
         :options="{
-          ghostClass: 'ghost',
+          ghostClass: 'ghost',          
+          setData: modifyDragItem
         }"
       >
         <ElemItem
@@ -36,7 +41,7 @@
       v-show="modalVisible"
       @close="modalVisible=false"
       title="Добавить элемент"
-      :onSbm="() => addElemAndClearAll()"
+      :onSbm="() => onAdd()"
     > 
       <input 
         ref="toFocus"
@@ -60,7 +65,7 @@
         slot="body"
         type="text"
         class="input modal__input"
-        placeholder="Введите время"
+        placeholder="Введите время в формате ЧЧ:ММ"
         v-model="newElemTime"
       >
       <button 
@@ -120,6 +125,10 @@
           const newElems = elems.map(elem => elem.id)
           return this.$store.dispatch('setElemIds', { id: this.id, newElems })
         }
+      },
+
+      time() {
+        return this.$store.getters.stepTime(this.id);
       }
     },
     methods: {
@@ -132,18 +141,50 @@
         this.$nextTick(() => this.$refs.toFocus.focus())      
       },
 
-      addElemAndClearAll() {
+      toMinutes() {
+        const [hours, minutes] = this.newElemTime.split(':')
+        return hours * 60 + Number(minutes)
+      },
+
+      validate() {
+        const regexpHHMM = /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/
+        return regexpHHMM.test(this.newElemTime)
+      },
+
+      addElement() {
         this.addElem({ 
           id: this.id, 
           elemData: {
             title: this.newElemTitle,
             manager: this.newElemManager,
-            time: this.newElemTime
+            time: this.toMinutes()
           }
         })
+      },
+
+      clearAll() {
         this.newElemTitle = ''
         this.newElemManager = ''
         this.newElemTime = ''
+      },
+
+      onAdd() {
+        if (this.validate()) {
+          this.addElement()
+          this.clearAll()
+        } else {
+          alert('Неверный формат времени.')
+        }
+      },
+      
+      // Fix huge drag-image, replace it with the .elem_body
+      modifyDragItem(dataTransfer, dragEl) {
+        const HANDLER_PADDING = 15
+        
+        const body = dragEl.lastChild 
+        const width = body.scrollWidth - HANDLER_PADDING
+        const height = body.scrollHeight
+        dataTransfer.setDragImage(body, width, height / 2)
       }
     },
     data() {
@@ -210,12 +251,5 @@
       margin: 0;
       padding: 0;
     }
-  }
-
-  .line {
-    width: 1px;
-    height: 1px;
-    background: rgba(#2c3e50, .25);
-    flex-grow: 1;
   }
 </style>

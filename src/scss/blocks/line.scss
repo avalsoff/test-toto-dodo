@@ -1,0 +1,19 @@
+.line {
+  width: 1px;
+  height: 1px;
+  background: rgba(#2c3e50, .25);
+  flex-grow: 1;
+
+  &--fixed {
+    flex: 0 0 auto;
+    width: 100%;
+    max-width: 25px;
+  }
+
+  &--size {
+    &--medium {
+      width: 100%;
+      max-width: 50px;
+    }
+  }
+}

@@ -11,9 +11,8 @@
         <p v-else style="width:90px"></p>
       </div>
       <h3 class="stage-item__title">{{ title }}</h3>
-      <!-- TODO: Make dynamic -->
       <div class="stage-item__side stage-item__side--right">
-        <p class="stage-item__time">05:00</p>
+        <p class="stage-item__time">{{ time | formatTime }}</p>
       </div>
       <button class="handler" type="button">Drag handler</button>     
     </dt>
@@ -120,6 +119,10 @@
           const newSteps = steps.map(step => step.id)
           return this.$store.dispatch('setStepIds', { id: this.id, newSteps })
         }
+      },
+
+      time() {
+        return this.$store.getters.stageTime(this.id)
       }
     },
     data() {

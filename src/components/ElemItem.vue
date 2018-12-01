@@ -1,7 +1,7 @@
 <template>
   <li class="elem">   
     <span class="line line--horizontal"></span>
-    <div class="elem__body">{{ title }}</div>
+    <div class="elem__body"></div>
 
     <!-- <ModalEdit
 
@@ -45,6 +45,11 @@
       //   required: true
       // }
     },
+    data() {
+      return {
+
+      }
+    },
   }
 </script>
 
@@ -55,9 +60,15 @@
     align-items: center;
     &__body {
       border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      border: 1px solid #000;
+      width: 33px;
+      height: 33px;
+      border: 1px solid $accent;
+      background: $accent;
+      background-image: url('../assets/server.svg');
+      background-size: 21px;
+      background-repeat: no-repeat;
+      background-position: center;
+
     }
   }
 </style>
