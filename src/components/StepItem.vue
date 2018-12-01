@@ -23,8 +23,10 @@
         v-model="elems" 
         element="ul"
         :options="{
-          ghostClass: 'ghost',          
-          setData: modifyDragItem
+          ghostClass: 'ghost',
+          handle: '.elem__body',    
+          setData: modifyDragItem,            
+          forceFallback: true
         }"
       >
         <ElemItem
@@ -207,6 +209,7 @@
     padding-bottom: 15px;
 
     &__header {
+      cursor: move;
       display: flex;
       align-items: center;
       justify-content: space-between;

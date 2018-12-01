@@ -21,7 +21,9 @@
         <draggable
           v-model="steps" 
           :options="{
-            ghostClass: 'ghost'
+            ghostClass: 'ghost',
+            handle: '.step-item__header',            
+            forceFallback: true
           }"
         >
           <StepItem

@@ -50,7 +50,7 @@
     align-items: center;
 
     &__body {
-      cursor: pointer;
+      cursor: move;
       border-radius: 50%;
       width: 33px;
       height: 33px;

@@ -8,7 +8,9 @@
         v-model="stages" 
         :options="{
           ghostClass: 'ghost',
-          setData: modifyDragItem
+          handle: '.handler',
+          setData: modifyDragItem,
+          forceFallback: true
         }"
       >
         <StageItem
