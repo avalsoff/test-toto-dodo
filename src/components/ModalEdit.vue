@@ -84,6 +84,10 @@ export default {
       margin-bottom: 0;
     }
   }
+
+  &__button {
+    margin-left: 10px;
+  }
 }
 
 .modal-fade-enter,

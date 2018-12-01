@@ -51,3 +51,7 @@ export const addElem = ({ commit }, { id: stepId, elemData }) => {
 export const setElemIds = ({ commit }, { id: stepId, newElems }) => {
   commit('setElems', { stepId, newElems })
 }
+
+export const editElem = ({ commit }, { id, elemData }) => {
+  commit('setElem', { id, elemData });
+}

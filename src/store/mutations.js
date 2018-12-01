@@ -39,5 +39,9 @@ export default {
 
   setElems(state, { stepId, newElems}) {
     Vue.set(state.steps.byId[stepId], 'elems', newElems)
+  },
+
+  setElem(state, { id, elemData }) {
+    Vue.set(state.elems.byId, String(id), elemData)
   }
 }

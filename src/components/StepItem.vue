@@ -141,7 +141,12 @@
 
       time() {
         return this.$store.getters.stepTime(this.id);
-      }
+      },
+
+      minutes() {
+        const [hours, minutes] = this.newElemTime.split(':')
+        return hours * 60 + Number(minutes)
+      },
     },
     methods: {
       ...mapActions([
@@ -151,11 +156,6 @@
       openAddElemModal() {
         this.modalVisible = true
         this.$nextTick(() => this.$refs.toFocus.focus())      
-      },
-
-      toMinutes() {
-        const [hours, minutes] = this.newElemTime.split(':')
-        return hours * 60 + Number(minutes)
       },
 
       validate() {
@@ -169,7 +169,7 @@
           elemData: {
             title: this.newElemTitle,
             manager: this.newElemManager,
-            time: this.toMinutes()
+            time: this.minutes
           }
         })
       },
