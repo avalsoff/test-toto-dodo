@@ -15,7 +15,13 @@
       <span class="line line--fixed line--size--medium"></span>
     </div>
     <div class="step-item__controls">      
-      <button @click="openAddElemModal" title="Добавить элемент" type="button" class="step-item__add-elem"></button>
+      <button 
+        class="step-item__add-elem"
+        type="button" 
+        title="Добавить элемент" 
+        :disabled="additionDisabled" 
+        @click="openAddElemModal" 
+      ></button>
     </div>
     <div class="step-item__body">
       <draggable
@@ -147,6 +153,10 @@
         const [hours, minutes] = this.newElemTime.split(':')
         return hours * 60 + Number(minutes)
       },
+
+      additionDisabled() {
+        return this.elems.length >= 3
+      }
     },
     methods: {
       ...mapActions([
@@ -242,6 +252,10 @@
       height: 36px;
       left: 35px;
       top: 16px;
+
+      &:disabled {
+        opacity: .3;
+      }
     }
 
     &__body {
