@@ -107,6 +107,13 @@
         type: Boolean,
       }
     },
+    data() {
+      return {
+        isAccordionOpened: false,
+        modalVisible: false,
+        newStepTitle: ''
+      }
+    },
     computed: {
       steps: {
         get() {
@@ -123,13 +130,6 @@
 
       time() {
         return this.$store.getters.stageTime(this.id)
-      }
-    },
-    data() {
-      return {
-        isAccordionOpened: false,
-        modalVisible: false,
-        newStepTitle: ''
       }
     },
     methods: {
@@ -236,23 +236,5 @@
         }      
       }
     }
-  }
-
-  .handler {
-    outline: none;
-    position: absolute;
-    cursor: move;
-    right: 35px;
-    top: 15px;
-    width: 28px;
-    height: 28px;
-    font-size: 0;
-    border: none;
-    background: url('../assets/move.svg');
-    background-size: cover;
-  }
-
-  .ghost {
-    opacity: .55;
   }
 </style>

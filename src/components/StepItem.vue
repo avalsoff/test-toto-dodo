@@ -32,6 +32,8 @@
           :key="elem.id"
           :id="elem.id"
           :title="elem.title"
+          :manager="elem.manager"
+          :time="elem.time"
           :index="index"
         />
       </draggable>
@@ -113,6 +115,14 @@
         required: true
       }
     },
+    data() {
+      return {
+        modalVisible: false,
+        newElemTitle: '',
+        newElemManager: '',
+        newElemTime: ''
+      }
+    },
     computed: {
       elems: {
         get() {
@@ -185,14 +195,6 @@
         const width = body.scrollWidth - HANDLER_PADDING
         const height = body.scrollHeight
         dataTransfer.setDragImage(body, width, height / 2)
-      }
-    },
-    data() {
-      return {
-        modalVisible: false,
-        newElemTitle: '',
-        newElemManager: '',
-        newElemTime: ''
       }
     }
   }

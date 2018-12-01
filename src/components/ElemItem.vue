@@ -1,22 +1,12 @@
 <template>
   <li class="elem">   
     <span class="line line--horizontal"></span>
-    <div class="elem__body"></div>
-
-    <!-- <ModalEdit
-
-    >
-    </ModalEdit> -->
+    <div @click="$emit('editElem')" title="Редактировать элемент" class="elem__body"></div>
   </li>
 </template>
 
 <script>
-  import ModalEdit from '@/components/ModalEdit'
-
   export default {
-    components: {
-      ModalEdit
-    },
     props: {
       id: {
         type: Number,
@@ -33,17 +23,17 @@
           return Boolean( value.trim() )
         }
       },
-      // manager: {
-      //   type: String,
-      //   required: true,
-      //   validator(value) {
-      //     return Boolean( value.trim() )
-      //   }
-      // },
-      // time: {
-      //   type: String,
-      //   required: true
-      // }
+      manager: {
+        type: String,
+        required: true,
+        validator(value) {
+          return Boolean( value.trim() )
+        }
+      },
+      time: {
+        type: Number,
+        required: true
+      }
     },
     data() {
       return {
@@ -58,7 +48,9 @@
     width: 33.333333%;
     display: flex;
     align-items: center;
+
     &__body {
+      cursor: pointer;
       border-radius: 50%;
       width: 33px;
       height: 33px;
@@ -68,7 +60,6 @@
       background-size: 21px;
       background-repeat: no-repeat;
       background-position: center;
-
     }
   }
 </style>

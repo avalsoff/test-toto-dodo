@@ -5,7 +5,10 @@
         <header class="modal__header">
           {{ title }}
         </header>
-        <form @submit.prevent="onSbm" @keyup.esc="close">            
+        <form 
+          @submit.prevent="onSbm" 
+          @keyup.esc="close"
+        >            
           <section class="modal__body">
             <slot name="body"></slot>
           </section>

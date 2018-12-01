@@ -1,0 +1,17 @@
+.handler {
+  outline: none;
+  position: absolute;
+  cursor: move;
+  right: 35px;
+  top: 15px;
+  width: 28px;
+  height: 28px;
+  font-size: 0;
+  border: none;
+  background: url('../assets/move.svg');
+  background-size: cover;
+}
+
+.ghost {
+  opacity: .55;
+}
