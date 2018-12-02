@@ -3,9 +3,13 @@ import App from './App.vue'
 import router from './router'
 import store from '@/store'
 
+import VueTimepicker from 'vue2-timepicker'
+
 import cnst from './const'
 
 Vue.config.productionTip = false
+
+Vue.use(VueTimepicker)
 
 Vue.filter('formatTime', time => {
   const fl = Math.floor

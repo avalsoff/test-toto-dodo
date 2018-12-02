@@ -70,14 +70,11 @@
         placeholder="Введите ФИО отвественного"
         v-model="newElemManager"
       >
-      <input 
-        required
+      <VueTimepicker 
         slot="body"
-        type="text"
-        class="input modal__input"
-        placeholder="Введите время в формате ЧЧ:ММ"
         v-model="newElemTime"
-      >
+      ></VueTimepicker>
+
       <button 
         slot="footer"
         type="submit"
@@ -93,6 +90,7 @@
   import ElemItem from '@/components/ElemItem.vue'
   import ModalEdit from '@/components/ModalEdit.vue'
 
+  import VueTimepicker from 'vue2-timepicker'
   import draggable from 'vuedraggable'
   import { mapActions, mapGetters } from 'vuex'
 
@@ -100,7 +98,8 @@
     components: {
       ElemItem,
       ModalEdit,
-      draggable
+      draggable,
+      VueTimepicker
     },
     props: {
       id: {
@@ -128,7 +127,7 @@
         modalVisible: false,
         newElemTitle: '',
         newElemManager: '',
-        newElemTime: ''
+        newElemTime: {HH: '00', mm: '00'}
       }
     },
     computed: {
@@ -150,8 +149,8 @@
       },
 
       minutes() {
-        const [hours, minutes] = this.newElemTime.split(':')
-        return hours * 60 + Number(minutes)
+        const { HH, mm } = this.newElemTime
+        return HH * 60 + Number(mm)
       },
 
       additionDisabled() {
@@ -168,11 +167,6 @@
         this.$nextTick(() => this.$refs.toFocus.focus())      
       },
 
-      validate() {
-        const regexpHHMM = /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/
-        return regexpHHMM.test(this.newElemTime)
-      },
-
       addElement() {
         this.addElem({ 
           id: this.id, 
@@ -187,16 +181,12 @@
       clearAll() {
         this.newElemTitle = ''
         this.newElemManager = ''
-        this.newElemTime = ''
+        this.newElemTime = {HH:'00',mm:'00'}
       },
 
       onAdd() {
-        if (this.validate()) {
-          this.addElement()
-          this.clearAll()
-        } else {
-          alert('Неверный формат времени.')
-        }
+        this.addElement()
+        this.clearAll()
       },
       
       // Fix huge drag-image, replace it with the .elem_body

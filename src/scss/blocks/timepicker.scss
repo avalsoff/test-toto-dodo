@@ -1,0 +1,39 @@
+.time-picker {
+  width: 100%;
+  input.display-time {  
+    display: block;
+    outline: none;
+    width: 100%;
+    padding: 7px 12px;
+    border-radius: 5px;
+    border: 1px solid darken($border, 25%);
+    font-size: 14px;
+  }
+
+  .clear-btn {
+    right: 5px;
+    top: 2px;
+  }
+
+  .dropdown {
+    width: 100%;
+
+    .select-list {
+      width: 100%;
+    }
+
+    .hint {
+      display: none;
+    }
+
+    ul {
+      li {
+        &.active,
+        &.active:hover {
+          background: lighten($accent, 10%);
+        }
+      }
+      
+    }
+  }
+}

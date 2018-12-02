@@ -28,15 +28,11 @@
         :value="manager"
         @input="e => newElemManager = e.target.value"
       >
-      <input 
-        required
+      <VueTimepicker 
         slot="body"
-        type="text"
-        class="input modal__input"
-        placeholder="Введите время в формате ЧЧ:ММ"
-        :value="time | formatTime"
-        @input="e => newElemTime = e.target.value"
-      >
+        :value="getTimeObj()"
+        @input="e => newElemTime = e"
+      ></VueTimepicker>
 
       <button 
         slot="footer"
@@ -60,11 +56,13 @@
 <script>
   import ModalEdit from '@/components/ModalEdit'
  
+  import VueTimepicker from 'vue2-timepicker'
   import { mapActions } from 'vuex'
 
   export default {
     components: {
-      ModalEdit
+      ModalEdit,
+      VueTimepicker
     },
     props: {
       id: {
@@ -99,13 +97,13 @@
         modalVisible: false,
         newElemTitle: this.title,
         newElemManager: this.manager,
-        newElemTime: this.$options.filters.formatTime(this.time)
+        newElemTime: this.getTimeObj()
       }
     },
     computed: {      
       minutes() {
-        const [hours, minutes] = this.newElemTime.split(':')
-        return hours * 60 + Number(minutes)
+        const { HH, mm } = this.newElemTime
+        return HH * 60 + Number(mm)
       },
     },
     methods: {
@@ -113,14 +111,18 @@
         'editElem'
       ]),
 
+      getTimeObj() {
+        const time = this.time
+        const pad = n => n < 10 ? '0' + n : n
+        const HH = pad( Math.floor(time / 60) % 24 )
+        const mm = pad( time % 60 )
+
+        return { HH, mm }
+      },
+
       openEditModal() {
         this.modalVisible = true
         this.$refs.toFocus.focus()
-      },
-
-      validate() {
-        const regexpHHMM = /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/
-        return regexpHHMM.test(this.newElemTime)
       },
 
       editElement() {
@@ -136,12 +138,8 @@
       },
 
       onEdit() {
-        if (this.validate()) {
-          this.editElement()
-          this.modalVisible = false
-        } else {
-          alert('Неверный формат времени.')
-        }
+        this.editElement()
+        this.modalVisible = false
       },
     }
   }
